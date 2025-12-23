@@ -34,14 +34,14 @@ docker save sub-store-migrate:v1 | gzip > /tmp/sub-store-image.tar.gz
 ```
 说明：/tmp 是临时目录，也可改为你指定的路径（如 ~/sub-store-image.tar.gz）  
 ## 步骤 3：定位并备份容器的持久化数据  
-容器的核心数据在「挂载目录」（步骤 1 查到的 Source: /etc/sub-store），只需备份这个目录：
+容器的核心数据在「挂载目录」（步骤 1 查到的 Source: /data/sub-store），只需备份这个目录：
 ```bash
 # 1. 确认数据目录的文件（验证数据存在）
 ls -l /data/sub-store  # 能看到容器的配置/日志/订阅数据即正常
 ```
 ```
 # 2. 打包数据目录为压缩文件（保留完整路径）
-tar -zcvf /tmp/sub-store-data.tar.gz /etc/sub-store
+tar -zcvf /tmp/sub-store-data.tar.gz /data/sub-store
 ```
 参数说明：  
 -z：用gzip压缩；-c：创建压缩包；-v：显示打包过程；-f：指定文件名  
@@ -102,7 +102,7 @@ sudo tar -zxvf sub-store-data.tar.gz -C /
 # 若提示「权限不足」，加 sudo 执行
 
 # 3. 验证数据是否恢复成功
-ls -l /etc/sub-store  # 能看到和原主机一致的文件即成功
+ls -l /data/sub-store  # 能看到和原主机一致的文件即成功
 ```
 ## 步骤 4：重建容器（和原主机配置完全一致） 
 用导入的镜像 + 恢复的数据，重建和原主机一样的容器（复制原主机的启动命令，仅镜像名改为导入的镜像）：  
@@ -112,7 +112,7 @@ docker run -it -d \
 -e "SUB_STORE_CRON=55 23 * * *" \
 -e SUB_STORE_FRONTEND_BACKEND_PATH=/bYJyUABXrGClOt6qUFfM \
 -p 3001:3001 \
--v /etc/sub-store:/opt/app/data \
+-v /data/sub-store:/opt/app/data \
 --name sub-store \
 sub-store-migrate:v1  # 改为导入的镜像名:标签
 ```
