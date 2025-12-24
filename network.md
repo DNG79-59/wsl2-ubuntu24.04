@@ -57,9 +57,12 @@ echo "nameserver 119.29.29.29" | sudo tee -a /etc/resolv.conf > /dev/null
 sudo chattr +i /etc/resolv.conf
 EOF
 chmod +x /etc/wsl-static-ip.sh
-cat > /etc/profile.d/wsl-init.sh << EOF
-/etc/profile.d/wsl-init.sh
+cat >> /etc/wsl.conf << EOF
+[boot]
+command = "/usr/local/bin/set-wsl-static-ip.sh"  # WSL启动时以root执行该脚本
+
+[network]
+generateResolvConf = false  # 禁止自动生成resolv.conf，保留自定义DNS
 EOF
-sudo chmod +x /etc/profile.d/wsl-init.sh
 '
 ```
