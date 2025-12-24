@@ -66,6 +66,11 @@ scp /tmp/sub-store-data.tar.gz 目标主机用户名@目标主机IP:/home/目标
 # 示例：scp /tmp/sub-store-image.tar.gz yandf@192.168.1.100:/home/yandf/
 # 输入目标主机密码即可传输
 ```
+## 如果是其他端口
+参考
+```
+scp -P 22152 sub-store-data.tar.gz yandf@192.168.217.152:/home/yandf/
+```
 方式 2：U 盘 / 网盘传输（无网络时用）  
 把原主机 /tmp 下的两个压缩包拷贝到 U 盘；  
 将 U 盘插到目标主机，把压缩包拷贝到目标主机的 /tmp 目录（或任意目录）。  
