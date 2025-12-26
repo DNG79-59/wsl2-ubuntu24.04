@@ -66,3 +66,37 @@ generateResolvConf = false  # 禁止自动生成resolv.conf，保留自定义DNS
 EOF
 '
 ```
+# windows的端口转发
+使用Portproxy模式下的Netsh命令即能实现Windows系统中的端口转发，转发命令如下:
+```
+netsh interface portproxy add v4tov4 listenaddress=[localaddress] listenport=[localport] connectaddress=[destaddress]
+```
+解释一下这其中的参数意义
+```
+listenaddress – 等待连接的本地ip地址
+listenport – 本地监听的TCP端口（待转发）
+connectaddress – 被转发端口的本地或者远程主机的ip地址
+connectport – 被转发的端口
+```
+举个例子，服务器内网IP是172.16.0.4，需要将8080端口转发到国外服务器104.104.104.104的9999端口，那么命令如下：
+```
+netsh interface portproxy add v4tov4  listenaddress=172.16.0.4 listenport=8080 connectaddress=104.104.104.104 connectport=9999
+```
+下面的命令是用来展示系统中的所有转发规则：
+```
+netsh interface  portproxy show  v4tov4
+```
+删除刚才创建的那个转发的命令：
+```
+netsh interface  portproxy delete v4tov4 listenaddress=172.16.0.4 listenport=8080
+```
+注意：连接时请确保防火墙（Windows防火墙或者其他的第三方防护软件）允许外部连接到一个全新的端口，如果不允许，那么只能自行添加一个新的Windows防火墙规则。
+
+该命令的常用参数如下：
+```
+netstat -ano | find listenport 查看是否启动成功
+netsh interface portproxy show all 显示系统中的转发规则列表
+netsh interface portproxy dump 查看portproxy设置
+netsh interface portproxy delete v4tov4 listenport=localport listenaddress=localaddress
+netsh interface portproxy reset 清除所有端口转发规则
+```
